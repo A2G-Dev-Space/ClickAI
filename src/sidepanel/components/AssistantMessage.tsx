@@ -22,9 +22,9 @@ export default function AssistantMessage({ message }: AssistantMessageProps) {
   }
 
   return (
-    <div className="flex justify-start">
+    <div className="flex justify-start animate-fade-in">
       <div className="max-w-[80%]">
-        <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-sm px-4 py-2">
+        <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-sm px-4 py-2 shadow-sm hover:shadow-md transition-shadow">
           <div className="prose prose-sm dark:prose-invert max-w-none">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
