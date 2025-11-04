@@ -49,12 +49,12 @@ describe('AssistantMessage', () => {
   it('should handle copy button click', async () => {
     render(<AssistantMessage message={mockMessage} />)
 
-    const copyButton = screen.getByRole('button', { name: /복사/ })
+    const copyButton = screen.getByRole('button', { name: /메시지 복사/ })
     fireEvent.click(copyButton)
 
     await waitFor(() => {
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(mockMessage.content)
-      expect(screen.getByRole('button', { name: /복사됨/ })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /복사 완료/ })).toBeInTheDocument()
     })
   })
 
@@ -62,17 +62,17 @@ describe('AssistantMessage', () => {
     jest.useFakeTimers()
     render(<AssistantMessage message={mockMessage} />)
 
-    const copyButton = screen.getByRole('button', { name: /복사/ })
+    const copyButton = screen.getByRole('button', { name: /메시지 복사/ })
     fireEvent.click(copyButton)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /복사됨/ })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /복사 완료/ })).toBeInTheDocument()
     })
 
     jest.advanceTimersByTime(2000)
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /^복사$/ })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /메시지 복사/ })).toBeInTheDocument()
     })
 
     jest.useRealTimers()
