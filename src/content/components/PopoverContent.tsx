@@ -63,26 +63,41 @@ export default function PopoverContent({ result, onClose }: PopoverContentProps)
   }
 
   return (
-    <div>
-      <div className="popover-header">
-        <div className="popover-title">{getTitle()}</div>
-        <button onClick={onClose} className="close-button">
+    <div role="dialog" aria-labelledby="popover-title" aria-describedby="popover-content">
+      <header className="popover-header">
+        <h2 id="popover-title" className="popover-title">{getTitle()}</h2>
+        <button
+          onClick={onClose}
+          className="close-button"
+          aria-label="팝오버 닫기"
+          type="button"
+        >
           ✕
         </button>
-      </div>
+      </header>
 
-      <div className="popover-content">
+      <div id="popover-content" className="popover-content" role="region">
         {showDiff ? renderDiff() : <div className="result-text">{result.result}</div>}
       </div>
 
-      <div className="popover-actions">
-        <button onClick={() => setShowDiff(!showDiff)} className="action-button secondary">
+      <footer className="popover-actions">
+        <button
+          onClick={() => setShowDiff(!showDiff)}
+          className="action-button secondary"
+          aria-pressed={showDiff}
+          type="button"
+        >
           {showDiff ? '결과 보기' : '차이 보기'}
         </button>
-        <button onClick={handleCopy} className="action-button primary">
+        <button
+          onClick={handleCopy}
+          className="action-button primary"
+          aria-label={copied ? '복사 완료' : '클립보드에 복사'}
+          type="button"
+        >
           {copied ? '✓ 복사됨' : '복사'}
         </button>
-      </div>
+      </footer>
     </div>
   )
 }
