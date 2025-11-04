@@ -180,11 +180,14 @@ function registerMessageHandlers() {
 }
 
 // Context menu click handler
-chrome.contextMenus.onClicked.addListener((info, _tab) => {
+import { handleContextMenuClick } from './context-menu-handler'
+
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   console.log('Click AI: Context menu clicked', info.menuItemId, info.selectionText)
 
-  // Handle different menu actions
-  // This will be implemented in Milestone 4
+  if (info.selectionText && tab?.id) {
+    await handleContextMenuClick(info.menuItemId as string, info.selectionText, tab.id)
+  }
 })
 
 // Keep service worker alive during long operations

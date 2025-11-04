@@ -20,6 +20,7 @@
     "@crxjs/vite-plugin": "^2.2.1",
     "@tailwindcss/postcss": "^4.1.16",
     "@types/chrome": "^0.1.27",
+    "@types/diff-match-patch": "^1.0.36",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
@@ -40,6 +41,7 @@
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.19",
+    "diff-match-patch": "^1.0.5",
     "gpt-3-encoder": "^1.1.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
