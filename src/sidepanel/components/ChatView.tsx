@@ -3,6 +3,7 @@ import { useChatStore } from '../store/chatStore'
 import MessageList from './MessageList'
 import ChatInput from './ChatInput'
 import LoadingIndicator from './LoadingIndicator'
+import ChatWithPageToggle from './ChatWithPageToggle'
 
 export default function ChatView() {
   const { messages, isLoading, error, sendMessage, cancelMessage, clearError } = useChatStore()
@@ -19,6 +20,9 @@ export default function ChatView() {
       <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 p-4">
         <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Click AI</h1>
       </div>
+
+      {/* Chat with Page Toggle */}
+      <ChatWithPageToggle />
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4">

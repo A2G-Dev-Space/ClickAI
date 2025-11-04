@@ -17,13 +17,23 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     console.error('Context menu error:', message.payload.error)
     sendResponse({ success: true })
   } else if (message.type === 'PARSE_PAGE') {
-    // Parse page content
-    const pageData = {
-      url: window.location.href,
-      title: document.title,
-      content: document.body.innerText,
-    }
-    sendResponse({ success: true, data: pageData })
+    // Parse page content using Readability (async)
+    import('./page-parser').then(({ pageParser }) => {
+      const pageData = pageParser.getPageMetadata()
+
+      // Check for sensitive information
+      const sensitiveInfo = pageParser.checkForSensitiveInfo(pageData.content)
+      if (sensitiveInfo.length > 0) {
+        console.warn('Sensitive information detected and redacted:', sensitiveInfo)
+      }
+
+      sendResponse({ success: true, data: pageData })
+    }).catch((error) => {
+      console.error('Page parsing error:', error)
+      sendResponse({ success: false, error: error.message })
+    })
+
+    return true // Keep channel open for async response
   }
 
   return true // Keep message channel open

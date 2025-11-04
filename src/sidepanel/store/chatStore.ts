@@ -135,6 +135,29 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       session = get().currentSession!
     }
 
+    // Prepare messages array
+    let messagesToSend: ChatMessage[] = []
+
+    // Add page context as system message if enabled
+    if (state.isChatWithPageEnabled && state.pageContext) {
+      const systemMessage: ChatMessage = {
+        id: generateUUID(),
+        role: 'system',
+        content: `당신은 다음 웹 페이지의 내용을 참고하여 답변하는 AI입니다.
+
+페이지 제목: ${state.pageContext.title}
+URL: ${state.pageContext.url}
+${state.pageContext.publishDate ? `게시일: ${state.pageContext.publishDate}` : ''}
+
+페이지 내용:
+${state.pageContext.content}
+
+위 페이지 내용을 바탕으로 사용자의 질문에 답변해주세요.`,
+        timestamp: Date.now(),
+      }
+      messagesToSend.push(systemMessage)
+    }
+
     // Create user message
     const userMessage: ChatMessage = {
       id: generateUUID(),
@@ -151,6 +174,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     if (session.messages.length === 0) {
       session.title = content.substring(0, 50) + (content.length > 50 ? '...' : '')
     }
+
+    // Add messages for LLM
+    messagesToSend.push(...newMessages)
 
     // Create assistant message placeholder
     const assistantMessage: ChatMessage = {
@@ -180,7 +206,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       const response = await chrome.runtime.sendMessage({
         type: MessageType.SEND_CHAT,
         payload: {
-          messages: [...newMessages, assistantMessage],
+          messages: messagesToSend,
           sessionId: session.id,
         },
         timestamp: Date.now(),
