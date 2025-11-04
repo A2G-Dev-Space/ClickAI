@@ -31,7 +31,7 @@ export default function ChatInput({ onSend, onCancel, disabled, isLoading }: Cha
   }
 
   return (
-    <div className="p-4">
+    <div className="p-3 sm:p-4">
       <div className="flex items-end space-x-2">
         <textarea
           value={input}
@@ -40,13 +40,15 @@ export default function ChatInput({ onSend, onCancel, disabled, isLoading }: Cha
           placeholder="메시지를 입력하세요... (Shift+Enter로 줄바꿈)"
           disabled={disabled}
           rows={3}
-          className="flex-1 resize-none rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2 text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+          className="flex-1 resize-none rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 sm:px-4 text-sm sm:text-base text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-colors"
+          aria-label="채팅 메시지 입력"
         />
         <div className="flex flex-col space-y-2">
           {isLoading ? (
             <button
               onClick={handleCancel}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm font-medium"
+              className="px-3 py-2 sm:px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm font-medium transition-colors active:bg-red-800"
+              aria-label="메시지 전송 중지"
             >
               중지
             </button>
@@ -54,7 +56,8 @@ export default function ChatInput({ onSend, onCancel, disabled, isLoading }: Cha
             <button
               onClick={handleSend}
               disabled={disabled || !input.trim()}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+              className="px-3 py-2 sm:px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-colors active:bg-blue-800"
+              aria-label="메시지 전송"
             >
               전송
             </button>
