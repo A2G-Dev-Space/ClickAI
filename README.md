@@ -431,17 +431,11 @@ npm run preview          # 프로덕션 빌드 미리보기
 npm run lint             # ESLint 실행
 npm run lint:fix         # ESLint 오류 수정
 npm run format           # Prettier로 코드 포맷
-npm run type-check       # TypeScript 타입 검사
 
 # 테스트
-npm run test             # 모든 테스트 실행
-npm run test:unit        # 단위 테스트 실행
-npm run test:integration # 통합 테스트 실행
-npm run test:e2e         # E2E 테스트 실행
-npm run test:coverage    # 커버리지 보고서 생성
-
-# 릴리즈
-npm run release          # 새 릴리즈 생성 (버전 증가, 빌드, zip 생성)
+npm test                 # Jest로 모든 테스트 실행 (56 tests passing)
+npm run test:watch       # 감시 모드로 테스트 실행
+npm run test:coverage    # 커버리지 보고서와 함께 테스트 실행
 ```
 
 ### 환경 변수
