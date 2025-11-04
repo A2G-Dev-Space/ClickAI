@@ -1,5 +1,14 @@
 require('@testing-library/jest-dom')
 
+// Mock react-markdown
+jest.mock('react-markdown', () => {
+  return function ReactMarkdown({ children }) {
+    return children
+  }
+})
+
+jest.mock('remark-gfm', () => () => {})
+
 // Mock chrome API
 global.chrome = {
   runtime: {
