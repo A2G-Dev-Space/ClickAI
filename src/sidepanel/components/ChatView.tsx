@@ -4,8 +4,14 @@ import MessageList from './MessageList'
 import ChatInput from './ChatInput'
 import LoadingIndicator from './LoadingIndicator'
 import ChatWithPageToggle from './ChatWithPageToggle'
+import Header from './Header'
 
-export default function ChatView() {
+interface ChatViewProps {
+  onShowHistory: () => void
+  onShowSettings: () => void
+}
+
+export default function ChatView({ onShowHistory, onShowSettings }: ChatViewProps) {
   const { messages, isLoading, error, sendMessage, cancelMessage, clearError } = useChatStore()
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -17,9 +23,7 @@ export default function ChatView() {
   return (
     <div className="flex flex-col h-screen bg-white dark:bg-gray-900">
       {/* Header */}
-      <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 p-4">
-        <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Click AI</h1>
-      </div>
+      <Header onShowHistory={onShowHistory} onShowSettings={onShowSettings} />
 
       {/* Chat with Page Toggle */}
       <ChatWithPageToggle />
