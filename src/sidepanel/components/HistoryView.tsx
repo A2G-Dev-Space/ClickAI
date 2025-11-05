@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { useChatStore } from '../store/chatStore'
 import { ChatSession } from '@/shared/types'
 import { formatTimestamp, groupSessionsByDate } from '@/shared/utils'
-import { ArrowLeft, Trash2, Search } from 'lucide-react'
+import { ArrowLeft, Trash2, Search, Pin, PinOff } from 'lucide-react'
 import LoadingIndicator from './LoadingIndicator'
 import Fuse from 'fuse.js'
 
@@ -14,7 +14,7 @@ export default function HistoryView({ onBack }: HistoryViewProps) {
   const [sessions, setSessions] = useState<ChatSession[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const { loadSession, deleteSession, loadAllSessions } = useChatStore()
+  const { loadSession, deleteSession, loadAllSessions, togglePinSession } = useChatStore()
 
   useEffect(() => {
     loadSessions()
@@ -46,8 +46,12 @@ export default function HistoryView({ onBack }: HistoryViewProps) {
   const loadSessions = async () => {
     setLoading(true)
     const allSessions = await loadAllSessions()
-    // Sort by most recent
-    allSessions.sort((a, b) => b.updatedAt - a.updatedAt)
+    // Sort by pinned status, then by most recent
+    allSessions.sort((a, b) => {
+      if (a.isPinned && !b.isPinned) return -1
+      if (!a.isPinned && b.isPinned) return 1
+      return b.updatedAt - a.updatedAt
+    })
     setSessions(allSessions)
     setLoading(false)
   }
@@ -64,6 +68,12 @@ export default function HistoryView({ onBack }: HistoryViewProps) {
       await deleteSession(sessionId)
       await loadSessions()
     }
+  }
+
+  const handleTogglePin = async (sessionId: string, event: React.MouseEvent) => {
+    event.stopPropagation()
+    await togglePinSession(sessionId)
+    await loadSessions()
   }
 
   return (
@@ -141,7 +151,8 @@ export default function HistoryView({ onBack }: HistoryViewProps) {
                       >
                         <div className="flex items-start justify-between gap-2">
                           <div className="flex-1 min-w-0">
-                            <h3 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate">
+                            <h3 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate flex items-center">
+                              {session.isPinned && <Pin size={14} className="mr-2 text-blue-500" />}
                               {session.title}
                             </h3>
                             <div className="flex items-center mt-1 space-x-2 text-xs text-gray-500 dark:text-gray-400">
@@ -152,14 +163,28 @@ export default function HistoryView({ onBack }: HistoryViewProps) {
                               <span>{session.messages.length}개 메시지</span>
                             </div>
                           </div>
-                          <button
-                            onClick={(e) => handleDeleteSession(session.id, e)}
-                            className="ml-2 p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 opacity-0 sm:group-hover:opacity-100 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex-shrink-0"
-                            aria-label={`${session.title} 삭제`}
-                            tabIndex={0}
-                          >
-                            <Trash2 size={20} className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5} />
-                          </button>
+                          <div className="flex items-center">
+                            <button
+                              onClick={(e) => handleTogglePin(session.id, e)}
+                              className="ml-2 p-1.5 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 opacity-0 sm:group-hover:opacity-100 rounded hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all flex-shrink-0"
+                              aria-label={session.isPinned ? `${session.title} 고정 해제` : `${session.title} 고정`}
+                              tabIndex={0}
+                            >
+                              {session.isPinned ? (
+                                <PinOff size={20} className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5} />
+                              ) : (
+                                <Pin size={20} className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5} />
+                              )}
+                            </button>
+                            <button
+                              onClick={(e) => handleDeleteSession(session.id, e)}
+                              className="ml-2 p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 opacity-0 sm:group-hover:opacity-100 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex-shrink-0"
+                              aria-label={`${session.title} 삭제`}
+                              tabIndex={0}
+                            >
+                              <Trash2 size={20} className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5} />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </li>

@@ -26,6 +26,7 @@ interface ChatStore {
   completeMessage: (messageId: string) => void
   setError: (error: string) => void
   summarizeCurrentSession: () => Promise<void>
+  togglePinSession: (sessionId: string) => Promise<void>
 }
 
 export const useChatStore = create<ChatStore>((set, get) => ({
@@ -287,6 +288,26 @@ ${state.pageContext.content}
       }
     } catch (error) {
       console.error('Failed to summarize session:', error)
+    }
+  },
+
+  // Toggle the pinned status of a session
+  togglePinSession: async (sessionId: string) => {
+    try {
+      const allSessions = await get().loadAllSessions()
+      const sessionToUpdate = allSessions.find((s) => s.id === sessionId)
+
+      if (sessionToUpdate) {
+        const updatedSession = { ...sessionToUpdate, isPinned: !sessionToUpdate.isPinned }
+        await chrome.runtime.sendMessage({
+          type: MessageType.SAVE_SESSION,
+          payload: updatedSession,
+          timestamp: Date.now(),
+        })
+      }
+    } catch (error) {
+      console.error('Failed to toggle pin for session:', error)
+      set({ error: 'Failed to update session pin status' })
     }
   },
 

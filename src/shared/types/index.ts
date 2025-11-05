@@ -52,6 +52,7 @@ export interface ChatSession {
   createdAt: number
   updatedAt: number
   pageContext?: PageContext
+  isPinned?: boolean
 }
 
 export interface PageContext {
