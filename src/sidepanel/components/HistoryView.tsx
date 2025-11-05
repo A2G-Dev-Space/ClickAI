@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useChatStore } from '../store/chatStore'
 import { ChatSession } from '@/shared/types'
-import { formatTimestamp } from '@/shared/utils'
+import { formatTimestamp, groupSessionsByDate } from '@/shared/utils'
 import { ArrowLeft, Trash2, Search } from 'lucide-react'
 import LoadingIndicator from './LoadingIndicator'
 import Fuse from 'fuse.js'
@@ -37,6 +37,11 @@ export default function HistoryView({ onBack }: HistoryViewProps) {
     }
     return fuse.search(searchQuery).map((result) => result.item)
   }, [searchQuery, sessions, fuse])
+
+  const groupedSessions = useMemo(
+    () => groupSessionsByDate(filteredSessions),
+    [filteredSessions]
+  )
 
   const loadSessions = async () => {
     setLoading(true)
@@ -100,7 +105,7 @@ export default function HistoryView({ onBack }: HistoryViewProps) {
               <p className="text-sm mt-2">로딩 중...</p>
             </div>
           </div>
-        ) : filteredSessions.length === 0 ? (
+        ) : Object.keys(groupedSessions).length === 0 ? (
           <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
             <div className="text-center px-4">
               <p className="text-base sm:text-lg mb-2">
@@ -112,48 +117,57 @@ export default function HistoryView({ onBack }: HistoryViewProps) {
             </div>
           </div>
         ) : (
-          <ul className="space-y-2" role="list" aria-label="채팅 세션 목록">
-            {filteredSessions.map((session) => (
-              <li key={session.id}>
-                <div
-                  onClick={() => handleLoadSession(session.id)}
-                  className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-all duration-200 group active:scale-[0.98]"
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      handleLoadSession(session.id)
-                    }
-                  }}
-                  aria-label={`${session.title} 채팅 불러오기`}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate">
-                        {session.title}
-                      </h3>
-                      <div className="flex items-center mt-1 space-x-2 text-xs text-gray-500 dark:text-gray-400">
-                        <time dateTime={new Date(session.updatedAt).toISOString()}>
-                          {formatTimestamp(session.updatedAt)}
-                        </time>
-                        <span aria-hidden="true">•</span>
-                        <span>{session.messages.length}개 메시지</span>
+          <div className="space-y-4">
+            {Object.entries(groupedSessions).map(([groupTitle, sessionsInGroup]) => (
+              <div key={groupTitle}>
+                <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-1 mb-2">
+                  {groupTitle}
+                </h2>
+                <ul className="space-y-2" role="list" aria-label={`채팅 세션 목록 - ${groupTitle}`}>
+                  {sessionsInGroup.map((session) => (
+                    <li key={session.id}>
+                      <div
+                        onClick={() => handleLoadSession(session.id)}
+                        className="p-3 sm:p-4 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-all duration-200 group active:scale-[0.98]"
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault()
+                            handleLoadSession(session.id)
+                          }
+                        }}
+                        aria-label={`${session.title} 채팅 불러오기`}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white truncate">
+                              {session.title}
+                            </h3>
+                            <div className="flex items-center mt-1 space-x-2 text-xs text-gray-500 dark:text-gray-400">
+                              <time dateTime={new Date(session.updatedAt).toISOString()}>
+                                {formatTimestamp(session.updatedAt)}
+                              </time>
+                              <span aria-hidden="true">•</span>
+                              <span>{session.messages.length}개 메시지</span>
+                            </div>
+                          </div>
+                          <button
+                            onClick={(e) => handleDeleteSession(session.id, e)}
+                            className="ml-2 p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 opacity-0 sm:group-hover:opacity-100 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex-shrink-0"
+                            aria-label={`${session.title} 삭제`}
+                            tabIndex={0}
+                          >
+                            <Trash2 size={20} className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5} />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                    <button
-                      onClick={(e) => handleDeleteSession(session.id, e)}
-                      className="ml-2 p-1.5 text-gray-400 hover:text-red-600 dark:hover:text-red-400 opacity-0 sm:group-hover:opacity-100 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex-shrink-0"
-                      aria-label={`${session.title} 삭제`}
-                      tabIndex={0}
-                    >
-                      <Trash2 size={20} className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5} />
-                    </button>
-                  </div>
-                </div>
-              </li>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </main>
     </div>

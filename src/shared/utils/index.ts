@@ -1,6 +1,7 @@
 // Utility functions for Click AI Extension
 
 import { ClickAIError } from '../errors'
+import { ChatSession } from '../types'
 
 // Generate UUID v4
 export function generateUUID(): string {
@@ -30,6 +31,50 @@ export function formatTimestamp(timestamp: number): string {
     month: 'long',
     day: 'numeric',
   })
+}
+
+// Group sessions by date
+export function groupSessionsByDate(sessions: ChatSession[]): Record<string, ChatSession[]> {
+  const groups: Record<string, ChatSession[]> = {
+    '오늘': [],
+    '어제': [],
+    '지난 7일': [],
+    '지난 30일': [],
+    '이전': [],
+  }
+
+  const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+  const sevenDaysAgo = new Date(today)
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+  const thirtyDaysAgo = new Date(today)
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+
+  for (const session of sessions) {
+    const sessionDate = new Date(session.updatedAt)
+    if (sessionDate >= today) {
+      groups['오늘'].push(session)
+    } else if (sessionDate >= yesterday) {
+      groups['어제'].push(session)
+    } else if (sessionDate >= sevenDaysAgo) {
+      groups['지난 7일'].push(session)
+    } else if (sessionDate >= thirtyDaysAgo) {
+      groups['지난 30일'].push(session)
+    } else {
+      groups['이전'].push(session)
+    }
+  }
+
+  // Remove empty groups
+  for (const key in groups) {
+    if (groups[key].length === 0) {
+      delete groups[key]
+    }
+  }
+
+  return groups
 }
 
 // Retry function with exponential backoff
