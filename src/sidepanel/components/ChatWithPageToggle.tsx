@@ -4,7 +4,7 @@ export default function ChatWithPageToggle() {
   const { isChatWithPageEnabled, pageContext, toggleChatWithPage, error } = useChatStore()
 
   return (
-    <div className="flex items-center justify-between p-2.5 sm:p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+    <div className="flex items-center justify-between p-2.5 sm:p-3 border-b border-gray-200 dark:border-gray-700/50 bg-gray-50 dark:bg-transparent">
       <div className="flex-1 min-w-0 mr-3">
         <div className="flex items-center space-x-2">
           <label

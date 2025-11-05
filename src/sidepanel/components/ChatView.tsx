@@ -21,7 +21,7 @@ export default function ChatView({ onShowHistory, onShowSettings }: ChatViewProp
   }, [messages])
 
   return (
-    <div className="flex flex-col h-screen bg-white dark:bg-gray-900">
+    <div className="flex flex-col h-screen bg-white dark:aurora-background">
       {/* Header */}
       <Header onShowHistory={onShowHistory} onShowSettings={onShowSettings} />
 
