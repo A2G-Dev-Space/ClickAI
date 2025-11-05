@@ -46,12 +46,28 @@
   - **문제점:** AI가 응답을 생성하는 동안 사용자는 단순히 로딩 인디케이터만 보게 되어, 응답이 언제 완료될지 알 수 없어 답답함을 느낄 수 있습니다.
   - **개선 제안:** AI의 응답이 생성되는 과정을 실시간 타이핑 효과로 보여줍니다. 한 글자씩 나타나는 효과는 AI가 '생각'하고 '쓰고' 있다는 인상을 주어 사용자 경험을 더욱 인터랙티브하고 생동감 있게 만듭니다.
   - **구현 내용:**
-    - `TypingEffect` React 컴포넌트를 새로 구현했습니다. 이 컴포넌트는 `useEffect`와 `requestAnimationFrame`을 사용하여 주어진 텍스트를 한 글자씩 부드럽게 표시합니다.
+    - `TypingEffect` React 컴포넌트를 새로 구현했습니다. 이 컴по넌트는 `useEffect`와 `requestAnimationFrame`을 사용하여 주어진 텍스트를 한 글자씩 부드럽게 표시합니다.
     - `AssistantMessage` 컴포넌트 내에서, 마지막 AI 메시지이고 스트리밍이 진행 중(`isLoading` && `isLastMessage`)일 때 `TypingEffect` 컴포넌트를 렌더링하도록 조건부 로직을 추가했습니다.
     - 타이핑 효과가 진행 중일 때는 커서(cursor)를 표시하여 실제 타이핑하는 듯한 느낌을 강화했습니다.
   - **구현 위치:**
     - `src/sidepanel/components/TypingEffect.tsx` (new file)
     - `src/sidepanel/components/AssistantMessage.tsx`
+
+---
+- **페이지 컨텍스트 인용 및 하이라이팅 (Source Citation & Highlighting):** (✅ 완료 - 2025-11-05)
+  - **문제점:** "Chat with Page" 기능 사용 시, AI가 페이지의 어떤 정보를 기반으로 답변했는지 알 수 없어 신뢰도가 떨어질 수 있습니다.
+  - **개선 제안:** AI가 페이지 컨텍스트를 사용하여 답변을 생성할 때, 어떤 부분을 참고했는지 출처(citation)를 표시하고, 해당 출처를 클릭하면 원본 페이지의 해당 위치로 이동하여 하이라이트 해주는 기능을 구현합니다.
+  - **구현 내용:**
+    - **콘텐츠 청킹 및 ID 부여:** `PageParser`가 페이지 콘텐츠를 단락, 목록 등 의미있는 단위로 분할하고, 각 청크에 `click-ai-ref-N` 형태의 고유 ID를 부여하도록 수정했습니다. 이 ID는 실제 DOM 요소에 `data-click-ai-ref-id` 속성으로 주입됩니다.
+    - **LLM 프롬프트 엔지니어링:** `LLMClient`에 시스템 프롬프트를 동적으로 수정하는 로직을 추가하여, AI에게 페이지 컨텍스트를 인용할 때 반드시 `[click-ai-ref-N]` 형식으로 출처를 명시하도록 지시했습니다.
+    - **인용 렌더링:** AI 응답에 포함된 `[click-ai-ref-N]` 구문을 파싱하여, 클릭 가능한 인용 번호 아이콘으로 렌더링하는 `Citation` 컴포넌트를 새로 구현했습니다.
+    - **하이라이팅:** 인용 아이콘을 클릭하면 `content_script`에 메시지를 보내고, 해당 `data-click-ai-ref-id`를 가진 DOM 요소를 찾아 스크롤한 뒤 일시적인 하이라이트 효과를 적용하는 기능을 구현했습니다.
+  - **구현 위치:**
+    - `src/content/page-parser.ts`
+    - `src/background/llm-client.ts`
+    - `src/sidepanel/components/AssistantMessage.tsx`
+    - `src/sidepanel/components/Citation.tsx` (new file)
+    - `src/content/index.ts`
 
 ---
 

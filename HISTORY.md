@@ -4,3 +4,4 @@
 - **Gemini 스타일 로딩 인디케이터:** (✅ 완료 - 2025-11-05)
 - **의미있는 아이콘 트랜지션 (Meaningful Icon Transitions):** (✅ 완료 - 2025-11-05)
 - **실시간 타이핑 효과 (Live Typing Effect):** (✅ 완료 - 2025-11-05)
+- **페이지 컨텍스트 인용 및 하이라이팅 (Source Citation & Highlighting):** (✅ 완료 - 2025-11-05)
