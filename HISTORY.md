@@ -6,3 +6,4 @@
 - **실시간 타이핑 효과 (Live Typing Effect):** (✅ 완료 - 2025-11-05)
 - **페이지 컨텍스트 인용 및 하이라이팅 (Source Citation & Highlighting):** (✅ 완료 - 2025-11-05)
 - **후속 질문 제안 (Suggested Follow-up Questions):** (✅ 완료 - 2025-11-05)
+- **대화 자동 요약 (Conversation Summary):** (✅ 완료 - 2025-11-05)

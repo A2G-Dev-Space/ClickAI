@@ -83,6 +83,20 @@
     - `src/sidepanel/components/SuggestedQuestion.tsx` (new file)
 
 ---
+- **대화 자동 요약 (Conversation Summary):** (✅ 완료 - 2025-11-05)
+  - **문제점:** 채팅 기록 목록에서 각 대화의 내용을 파악하기 어려워, 원하는 대화를 다시 찾아보기가 번거롭습니다.
+  - **개선 제안:** AI와의 대화가 종료될 때마다, 전체 대화 내용을 자동으로 요약하여 세션의 제목으로 저장합니다. 이를 통해 사용자는 기록 목록에서 각 대화의 핵심 내용을 한눈에 파악할 수 있습니다.
+  - **구현 내용:**
+    - **요약 API 추가:** `LLMClient`에 대화 내용을 받아 5단어 내외로 요약해주는 `summarize` 메소드를 새로 구현했습니다. 이는 스트리밍이 아닌 일반 비동기 요청으로 작동합니다.
+    - **요약 트리거:** `chatStore`의 `completeMessage` 액션이 호출될 때(즉, AI의 답변 스트리밍이 끝났을 때), 현재 세션의 모든 메시지를 `background`로 보내 요약을 요청하는 `summarizeCurrentSession` 액션을 트리거하도록 구현했습니다.
+    - **상태 및 저장소 업데이트:** 요약된 제목을 받아 현재 세션의 `title`을 업데이트하고, 변경된 세션 정보를 `storageManager`를 통해 영구적으로 저장하도록 구현했습니다.
+  - **구현 위치:**
+    - `src/background/llm-client.ts`
+    - `src/sidepanel/store/chatStore.ts`
+    - `src/background/index.ts`
+    - `src/shared/types/index.ts`
+
+---
 
 ## 마일스톤 1: 프로젝트 설정 (✅ 완료)
 

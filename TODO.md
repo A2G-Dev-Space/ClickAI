@@ -24,7 +24,6 @@
 - **사용자 및 AI 아바타 디자인:**
 
 ## UI/UX 전문가 제안 개선사항
-- **대화 자동 요약 (Conversation Summary):**
 - **전체 기록 검색 (Full-text Search):**
 - **날짜별 그룹화 (Group by Date):**
 - **세션 즐겨찾기 및 다중 선택 (Pin & Bulk Actions):**
