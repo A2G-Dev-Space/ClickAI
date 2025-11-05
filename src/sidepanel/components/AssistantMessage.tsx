@@ -24,7 +24,7 @@ export default function AssistantMessage({ message }: AssistantMessageProps) {
   return (
     <div className="flex justify-start animate-fade-in" role="article" aria-label="AI 응답">
       <div className="max-w-[85%] sm:max-w-[80%] md:max-w-[75%]">
-        <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-sm px-3 py-2 sm:px-4 shadow-sm hover:shadow-md transition-all duration-200">
+        <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-lg px-4 py-3 sm:px-4 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
@@ -52,7 +52,7 @@ export default function AssistantMessage({ message }: AssistantMessageProps) {
             </ReactMarkdown>
           </div>
         </div>
-        <div className="flex items-center justify-between mt-1 px-1">
+        <div className="flex items-center justify-between mt-2 px-2">
           <div className="text-xs text-gray-500 dark:text-gray-400">
             <time dateTime={new Date(message.timestamp).toISOString()}>
               {formatTimestamp(message.timestamp)}
@@ -60,7 +60,7 @@ export default function AssistantMessage({ message }: AssistantMessageProps) {
           </div>
           <button
             onClick={handleCopy}
-            className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 ml-2 px-2 py-1 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 ml-2 p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
             aria-label={copied ? '복사 완료' : '메시지 복사'}
           >
             {copied ? '✓ 복사됨' : '복사'}
