@@ -70,6 +70,19 @@
     - `src/content/index.ts`
 
 ---
+- **후속 질문 제안 (Suggested Follow-up Questions):** (✅ 완료 - 2025-11-05)
+  - **문제점:** 사용자는 AI의 답변을 받은 후 어떤 질문을 이어가야 할지 막막할 수 있습니다.
+  - **개선 제안:** AI가 답변을 완료한 후, 대화의 흐름을 이어갈 수 있는 2-3개의 관련 후속 질문을 제안해주는 기능을 추가합니다. 이를 통해 사용자는 더 깊이 있는 정보를 탐색할 수 있습니다.
+  - **구현 내용:**
+    - **LLM 프롬프트 엔지니어링:** `LLMClient`의 시스템 프롬프트에, 답변 마지막에 `SUGGESTED_QUESTION:` 접두사를 붙여 2-3개의 후속 질문을 제안하도록 지시하는 내용을 추가했습니다.
+    - **제안 질문 파싱 및 렌더링:** `AssistantMessage` 컴포넌트에서 AI의 응답을 파싱하여 `SUGGESTED_QUESTION:`으로 시작하는 라인을 분리하고, 이를 클릭 가능한 버튼으로 렌더링하는 `SuggestedQuestion` 컴포넌트를 새로 구현했습니다.
+    - **상태 연동:** 제안 질문 버튼을 클릭하면 `chatStore`의 `sendMessage` 액션을 호출하여 즉시 해당 질문을 AI에게 전송하도록 구현했습니다.
+  - **구현 위치:**
+    - `src/background/llm-client.ts`
+    - `src/sidepanel/components/AssistantMessage.tsx`
+    - `src/sidepanel/components/SuggestedQuestion.tsx` (new file)
+
+---
 
 ## 마일스톤 1: 프로젝트 설정 (✅ 완료)
 
