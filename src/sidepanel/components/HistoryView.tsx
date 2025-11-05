@@ -60,7 +60,7 @@ export default function HistoryView({ onBack }: HistoryViewProps) {
         {loading ? (
           <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400" role="status">
             <div className="flex flex-col items-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mb-2"></div>
               <p className="text-sm">로딩 중...</p>
             </div>
           </div>

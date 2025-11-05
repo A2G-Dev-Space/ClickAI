@@ -17,7 +17,7 @@ describe('UserMessage', () => {
 
   it('should have correct styling classes', () => {
     const { container } = render(<UserMessage message={mockMessage} />)
-    const messageContainer = container.querySelector('.bg-blue-600')
+    const messageContainer = container.querySelector('.bg-primary-600')
     expect(messageContainer).toBeInTheDocument()
     expect(messageContainer).toHaveClass('text-white')
   })

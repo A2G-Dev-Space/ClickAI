@@ -9,7 +9,7 @@ export default function UserMessage({ message }: UserMessageProps) {
   return (
     <div className="flex justify-end animate-fade-in" role="article" aria-label="사용자 메시지">
       <div className="max-w-[85%] sm:max-w-[80%] md:max-w-[75%]">
-        <div className="bg-blue-600 text-white rounded-2xl rounded-tr-lg px-4 py-3 sm:px-4 shadow-sm hover:shadow-md transition-all duration-200">
+        <div className="bg-primary-600 text-white rounded-2xl rounded-tr-lg px-4 py-3 sm:px-4 shadow-sm hover:shadow-md transition-all duration-200">
           <p className="text-sm sm:text-base whitespace-pre-wrap break-words leading-relaxed">
             {message.content}
           </p>

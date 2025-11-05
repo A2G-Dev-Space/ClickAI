@@ -9,7 +9,7 @@ describe('LoadingIndicator', () => {
 
   it('should render three dots', () => {
     const { container } = render(<LoadingIndicator />)
-    const dots = container.querySelectorAll('.w-2.h-2.bg-blue-600.rounded-full')
+    const dots = container.querySelectorAll('.w-2.h-2.bg-primary-600.rounded-full')
     expect(dots).toHaveLength(3)
   })
 

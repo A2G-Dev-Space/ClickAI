@@ -28,8 +28,8 @@ export default function ChatWithPageToggle() {
       <button
         id="chat-with-page"
         onClick={toggleChatWithPage}
-        className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-          isChatWithPageEnabled ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-600'
+        className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
+          isChatWithPageEnabled ? 'bg-primary-600' : 'bg-gray-300 dark:bg-gray-600'
         }`}
         role="switch"
         aria-checked={isChatWithPageEnabled}
