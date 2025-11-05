@@ -43,8 +43,10 @@ export class LLMClient {
       throw new APIAuthError('LLM API configuration is missing')
     }
 
+    const processedMessages = this.injectCitationInstructions(messages)
+
     // Check token count
-    const tokenCount = this.countTokens(messages)
+    const tokenCount = this.countTokens(processedMessages)
     console.log(`Request token count: ${tokenCount}`)
 
     if (tokenCount > 8000) {
@@ -66,7 +68,7 @@ export class LLMClient {
         },
         body: JSON.stringify({
           model: this.config.model,
-          messages: messages.map((m) => ({ role: m.role, content: m.content })),
+          messages: processedMessages.map((m) => ({ role: m.role, content: m.content })),
           stream: true,
           temperature: this.config.temperature,
           max_tokens: this.config.maxTokens,
@@ -185,6 +187,33 @@ export class LLMClient {
     }
 
     throw new APIAuthError(errorMessage)
+  }
+
+  /**
+   * Injects citation instructions into the system message if page context is present.
+   */
+  private injectCitationInstructions(messages: ChatMessage[]): ChatMessage[] {
+    const citationInstruction = `
+---
+CITATION INSTRUCTIONS:
+- When you use information from the provided page context in your response, you MUST cite the source.
+- To cite, find the corresponding reference ID (e.g., [click-ai-ref-0], [click-ai-ref-1], etc.) from the beginning of the text chunk you are referencing.
+- Place the citation ID directly after the sentence or statement it supports.
+- You can cite multiple sources for a single statement. Example: "This is a statement supported by two sources [click-ai-ref-5][click-ai-ref-12]."
+- Do NOT invent sources. Only use the IDs provided in the context.
+- Do NOT cite sources for information that is not from the provided context.
+---
+`
+    const processedMessages = messages.map((msg) => ({ ...msg })) // Deep copy
+    const systemMessage = processedMessages.find(
+      (msg) => msg.role === 'system' && msg.content.includes('Page Context:')
+    )
+
+    if (systemMessage) {
+      systemMessage.content += citationInstruction
+    }
+
+    return processedMessages
   }
 
   /**

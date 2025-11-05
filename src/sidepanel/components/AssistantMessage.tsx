@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { Copy, Check } from 'lucide-react'
 import AIAvatar from './AIAvatar'
 import TypingEffect from './TypingEffect'
+import Citation from './Citation' // Import the new component
 
 interface AssistantMessageProps {
   message: ChatMessage
@@ -18,7 +19,9 @@ export default function AssistantMessage({ message, index, isStreaming }: Assist
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(message.content)
+      // Remove citation markers for clean copy
+      const cleanContent = message.content.replace(/\[click-ai-ref-\d+\]/g, '')
+      await navigator.clipboard.writeText(cleanContent)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (error) {
@@ -26,32 +29,57 @@ export default function AssistantMessage({ message, index, isStreaming }: Assist
     }
   }
 
-  const markdownRenderer = (text: string) => (
-    <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
-      components={{
-        code: ({ className, children, ...props }) => {
-          const isBlock = className?.includes('language-')
-          return isBlock ? (
-            <pre className="bg-gray-900 dark:bg-gray-950 rounded p-2 sm:p-3 overflow-x-auto text-xs sm:text-sm">
-              <code className={className} {...props}>
+  const markdownRenderer = (text: string) => {
+    // Regex to find citations like [click-ai-ref-12]
+    const citationRegex = /\[(click-ai-ref-\d+)\]/g
+    const parts = text.split(citationRegex)
+
+    return (
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={{
+          code: ({ className, children, ...props }) => {
+            const isBlock = className?.includes('language-')
+            return isBlock ? (
+              <pre className="bg-gray-900 dark:bg-gray-950 rounded p-2 sm:p-3 overflow-x-auto text-xs sm:text-sm">
+                <code className={className} {...props}>
+                  {children}
+                </code>
+              </pre>
+            ) : (
+              <code
+                className="bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-xs sm:text-sm"
+                {...props}
+              >
                 {children}
               </code>
-            </pre>
-          ) : (
-            <code
-              className="bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-xs sm:text-sm"
-              {...props}
-            >
-              {children}
-            </code>
-          )
-        },
-      }}
-    >
-      {text}
-    </ReactMarkdown>
-  );
+            )
+          },
+          // Custom component for citations
+          p: ({ children }) => {
+            const processedChildren = (Array.isArray(children) ? children : [children]).flatMap(
+              (child) => {
+                if (typeof child === 'string') {
+                  const parts = child.split(citationRegex)
+                  return parts.map((part, i) => {
+                    if (i % 2 === 1) {
+                      // This is a citation ID
+                      return <Citation key={i} referenceId={part} />
+                    }
+                    return part
+                  })
+                }
+                return child
+              }
+            )
+            return <p>{processedChildren}</p>
+          },
+        }}
+      >
+        {text}
+      </ReactMarkdown>
+    )
+  }
 
   return (
     <div

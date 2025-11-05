@@ -13,41 +13,109 @@ export class PageParser {
   ]
 
   /**
-   * Parse page content using Readability
+   * Parse page content using Readability and inject IDs for citations
    */
-  parsePageContent(): string {
+  parsePageContent(): { id: string; text: string }[] {
     try {
-      // Clone document for Readability
       const documentClone = document.cloneNode(true) as Document
       const reader = new Readability(documentClone)
       const article = reader.parse()
 
-      if (article && article.textContent && article.textContent.length > 100) {
-        return this.sanitize(article.textContent)
+      if (!article || !article.content) {
+        return this.fallbackParse()
       }
 
-      // Fallback: Try <article> or <main> element
-      const main = document.querySelector('article, main')
-      if (main && main.textContent) {
-        return this.sanitize(main.textContent)
-      }
+      const contentDiv = document.createElement('div')
+      contentDiv.innerHTML = article.content
 
-      // Last resort: body text
-      return this.sanitize(document.body.innerText || '')
+      const chunks: { id: string; text: string }[] = []
+      let chunkIndex = 0
+
+      // Select paragraphs, list items, and headers as potential chunks
+      const elements = contentDiv.querySelectorAll('p, li, h1, h2, h3, h4, h5, h6')
+
+      elements.forEach((el) => {
+        const text = this.sanitize(el.textContent || '')
+        if (text.length > 20) { // Only include chunks with meaningful content
+          const id = `click-ai-ref-${chunkIndex++}`
+          chunks.push({ id, text })
+
+          // Find the corresponding element in the actual DOM to add the ID
+          // This is a simplification; a more robust solution might involve more complex DOM traversal
+          const originalEl = this.findOriginalElement(el)
+          if (originalEl) {
+            originalEl.setAttribute('data-click-ai-ref-id', id)
+          }
+        }
+      })
+
+      return chunks
     } catch (error) {
       console.error('Page parsing error:', error)
-      return this.sanitize(document.body.innerText || '')
+      return this.fallbackParse()
     }
+  }
+
+  /**
+   * Fallback parsing method if Readability fails
+   */
+  private fallbackParse(): { id: string; text: string }[] {
+    const chunks: { id: string; text: string }[] = []
+    const bodyText = this.sanitize(document.body.innerText || '')
+    if (bodyText.length > 100) {
+      // Simple split by newline, could be improved
+      const paragraphs = bodyText.split('\n').filter(p => p.length > 20)
+      paragraphs.forEach((p, i) => {
+        chunks.push({ id: `click-ai-ref-fallback-${i}`, text: p })
+      })
+    }
+    return chunks
+  }
+
+  /**
+   * Tries to find the original DOM element corresponding to a cloned element.
+   * This is a challenging task and this implementation is a best-effort approach.
+   */
+  private findOriginalElement(clonedEl: Element): Element | null {
+    // Strategy 1: Use a unique selector if possible
+    let selector = ''
+    if (clonedEl.id) {
+      selector = `#${clonedEl.id}`
+    } else if (clonedEl.className) {
+      // Create a selector from classes, hoping it's specific enough
+      const classes = clonedEl.className.trim().split(/\s+/).join('.')
+      selector = `${clonedEl.tagName.toLowerCase()}.${classes}`
+    } else {
+      selector = clonedEl.tagName.toLowerCase()
+    }
+
+    // Add text content to selector for more specificity
+    const textSelector = `:contains("${(clonedEl.textContent || '').trim().substring(0, 20)}")`
+
+    try {
+      const candidates = document.querySelectorAll(selector + textSelector)
+      // If we find exactly one match, it's likely the correct one.
+      if (candidates.length === 1) {
+        return candidates[0]
+      }
+      // If multiple, we can't be sure, so we don't add the ID to avoid errors.
+    } catch (e) {
+      // Invalid selector, etc.
+    }
+    return null
   }
 
   /**
    * Get page metadata
    */
   getPageMetadata(): PageContext {
+    const contentChunks = this.parsePageContent()
+    const content = contentChunks.map(c => `[${c.id}] ${c.text}`).join('\n\n')
+
     return {
       url: window.location.href,
       title: document.title,
-      content: this.parsePageContent(),
+      content: content, // Now it's a string with IDs
       publishDate: this.extractPublishDate(),
     }
   }
