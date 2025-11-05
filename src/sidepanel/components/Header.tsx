@@ -18,7 +18,7 @@ export default function Header({ onShowHistory, onShowSettings }: HeaderProps) {
         <nav className="flex items-center space-x-1 sm:space-x-2" aria-label="주요 네비게이션">
           <button
             onClick={createNewSession}
-            className="p-1.5 sm:p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors active:scale-95"
+            className="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors active:scale-95"
             title="새 채팅"
             aria-label="새 채팅 시작"
           >
@@ -26,7 +26,7 @@ export default function Header({ onShowHistory, onShowSettings }: HeaderProps) {
           </button>
           <button
             onClick={onShowHistory}
-            className="p-1.5 sm:p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors active:scale-95"
+            className="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors active:scale-95"
             title="채팅 기록"
             aria-label="채팅 기록 보기"
           >
@@ -34,7 +34,7 @@ export default function Header({ onShowHistory, onShowSettings }: HeaderProps) {
           </button>
           <button
             onClick={onShowSettings}
-            className="p-1.5 sm:p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors active:scale-95"
+            className="p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors active:scale-95"
             title="설정"
             aria-label="설정 열기"
           >

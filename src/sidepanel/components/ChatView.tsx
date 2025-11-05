@@ -38,7 +38,7 @@ export default function ChatView({ onShowHistory, onShowSettings }: ChatViewProp
             </div>
           </div>
         ) : (
-          <MessageList messages={messages} />
+          <MessageList messages={messages} isLoading={isLoading} />
         )}
         <div ref={messagesEndRef} aria-live="polite" />
       </main>

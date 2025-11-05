@@ -5,13 +5,15 @@ import remarkGfm from 'remark-gfm'
 import { useState } from 'react'
 import { Copy, Check } from 'lucide-react'
 import AIAvatar from './AIAvatar'
+import TypingEffect from './TypingEffect'
 
 interface AssistantMessageProps {
   message: ChatMessage
   index: number
+  isStreaming: boolean
 }
 
-export default function AssistantMessage({ message, index }: AssistantMessageProps) {
+export default function AssistantMessage({ message, index, isStreaming }: AssistantMessageProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -24,6 +26,33 @@ export default function AssistantMessage({ message, index }: AssistantMessagePro
     }
   }
 
+  const markdownRenderer = (text: string) => (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        code: ({ className, children, ...props }) => {
+          const isBlock = className?.includes('language-')
+          return isBlock ? (
+            <pre className="bg-gray-900 dark:bg-gray-950 rounded p-2 sm:p-3 overflow-x-auto text-xs sm:text-sm">
+              <code className={className} {...props}>
+                {children}
+              </code>
+            </pre>
+          ) : (
+            <code
+              className="bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-xs sm:text-sm"
+              {...props}
+            >
+              {children}
+            </code>
+          )
+        },
+      }}
+    >
+      {text}
+    </ReactMarkdown>
+  );
+
   return (
     <div
       className="flex items-start space-x-3 sm:space-x-4 animate-fade-in"
@@ -35,30 +64,13 @@ export default function AssistantMessage({ message, index }: AssistantMessagePro
       <div className="max-w-[85%] sm:max-w-[80%] md:max-w-[75%]">
         <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-none px-4 py-3 sm:px-4 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                code: ({ className, children, ...props }) => {
-                  const isBlock = className?.includes('language-')
-                  return isBlock ? (
-                    <pre className="bg-gray-900 dark:bg-gray-950 rounded p-2 sm:p-3 overflow-x-auto text-xs sm:text-sm">
-                      <code className={className} {...props}>
-                        {children}
-                      </code>
-                    </pre>
-                  ) : (
-                    <code
-                      className="bg-gray-200 dark:bg-gray-700 px-1 py-0.5 rounded text-xs sm:text-sm"
-                      {...props}
-                    >
-                      {children}
-                    </code>
-                  )
-                },
-              }}
-            >
-              {message.content || '_생각 중..._'}
-            </ReactMarkdown>
+            {isStreaming ? (
+              <TypingEffect text={message.content || '_생각 중..._'}>
+                {(text) => markdownRenderer(text)}
+              </TypingEffect>
+            ) : (
+              markdownRenderer(message.content || '_생각 중..._')
+            )}
           </div>
         </div>
         <div className="flex items-center justify-between mt-2 px-2">
