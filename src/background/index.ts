@@ -105,6 +105,13 @@ function registerMessageHandlers() {
     return { success: true }
   })
 
+  // Session summarization
+  messageRouter.register(MessageType.SUMMARIZE_SESSION, async (payload) => {
+    const { messages } = payload
+    const summary = await llmClient.summarize(messages)
+    return { summary }
+  })
+
   // Settings operations
   messageRouter.register(MessageType.GET_SETTINGS, async () => {
     const settings = await storageManager.loadSettings()

@@ -142,6 +142,54 @@ export class LLMClient {
   }
 
   /**
+   * Summarize a conversation
+   */
+  async summarize(messages: ChatMessage[]): Promise<string> {
+    if (!this.config.endpoint || !this.config.apiKey) {
+      throw new APIAuthError('LLM API configuration is missing')
+    }
+
+    const summaryPrompt: ChatMessage = {
+      id: 'summary-prompt',
+      role: 'system',
+      content:
+        'Summarize the following conversation in 5 words or less. The summary should be in the language of the conversation.',
+      timestamp: Date.now(),
+    }
+
+    const messagesForSummary = [...messages, summaryPrompt]
+
+    try {
+      const response = await fetch(`${this.config.endpoint}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.config.apiKey}`,
+        },
+        body: JSON.stringify({
+          model: this.config.model,
+          messages: messagesForSummary.map((m) => ({ role: m.role, content: m.content })),
+          stream: false,
+          temperature: 0.2,
+          max_tokens: 20,
+        }),
+      })
+
+      if (!response.ok) {
+        await this.handleErrorResponse(response)
+      }
+
+      const data = await response.json()
+      const summary = data.choices?.[0]?.message?.content?.trim() || 'Untitled Chat'
+      // Clean up summary, remove quotes
+      return summary.replace(/["']/g, '')
+    } catch (error) {
+      console.error('Failed to summarize conversation:', error)
+      return 'Untitled Chat' // Fallback title
+    }
+  }
+
+  /**
    * Cancel ongoing stream
    */
   cancel(): void {

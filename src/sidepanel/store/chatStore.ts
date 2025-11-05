@@ -25,6 +25,7 @@ interface ChatStore {
   addMessageChunk: (messageId: string, chunk: string) => void
   completeMessage: (messageId: string) => void
   setError: (error: string) => void
+  summarizeCurrentSession: () => Promise<void>
 }
 
 export const useChatStore = create<ChatStore>((set, get) => ({
@@ -170,11 +171,6 @@ ${state.pageContext.content}
     const newMessages = [...state.messages, userMessage]
     set({ messages: newMessages, isLoading: true, error: null })
 
-    // Update session title if first message
-    if (session.messages.length === 0) {
-      session.title = content.substring(0, 50) + (content.length > 50 ? '...' : '')
-    }
-
     // Add messages for LLM
     messagesToSend.push(...newMessages)
 
@@ -262,6 +258,36 @@ ${state.pageContext.content}
   completeMessage: (messageId: string) => {
     set({ isLoading: false })
     console.log('Message completed:', messageId)
+    get().summarizeCurrentSession()
+  },
+
+  // Summarize the current session and update its title
+  summarizeCurrentSession: async () => {
+    const state = get()
+    const session = state.currentSession
+    if (!session || session.messages.length === 0) return
+
+    try {
+      const response = await chrome.runtime.sendMessage({
+        type: MessageType.SUMMARIZE_SESSION,
+        payload: { messages: session.messages },
+        timestamp: Date.now(),
+      })
+
+      if (response.success && response.data.summary) {
+        const updatedSession = { ...session, title: response.data.summary }
+        set({ currentSession: updatedSession })
+
+        // Save the updated session
+        await chrome.runtime.sendMessage({
+          type: MessageType.SAVE_SESSION,
+          payload: updatedSession,
+          timestamp: Date.now(),
+        })
+      }
+    } catch (error) {
+      console.error('Failed to summarize session:', error)
+    }
   },
 
   // Set error
