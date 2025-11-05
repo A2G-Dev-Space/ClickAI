@@ -9,7 +9,7 @@ export default function Header({ onShowHistory, onShowSettings }: HeaderProps) {
   const createNewSession = useChatStore((state) => state.createNewSession)
 
   return (
-    <header className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700/50 p-3 sm:p-4 bg-white dark:bg-transparent">
+    <header className="sticky top-0 z-10 flex-shrink-0 border-b border-gray-200/80 dark:border-gray-700/50 p-3 sm:p-4 bg-white/80 dark:bg-gray-900/70 backdrop-blur-lg">
       <div className="flex items-center justify-between">
         <h1 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white truncate">
           Click AI

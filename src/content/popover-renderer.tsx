@@ -30,6 +30,7 @@ export class PopoverRenderer {
 
     // Create React root container
     const reactRoot = document.createElement('div')
+    reactRoot.id = 'click-ai-popover-content-root'
     this.shadowRoot.appendChild(reactRoot)
 
     // Render React component
@@ -111,9 +112,9 @@ export class PopoverRenderer {
         padding: 0;
       }
 
-      div {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        background: white;
+      div#click-ai-popover-content-root {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: rgba(255, 255, 255, 0.8);
         border: 1px solid #e5e7eb;
         border-radius: 12px;
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -121,6 +122,22 @@ export class PopoverRenderer {
         max-width: 600px;
         max-height: 400px;
         overflow: auto;
+        backdrop-filter: blur(12px);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        div#click-ai-popover-content-root {
+          background: rgba(31, 41, 55, 0.8);
+          border-color: rgba(55, 65, 81, 0.8);
+          color: #d1d5db;
+        }
+        .popover-title { color: #f9fafb; }
+        .close-button { color: #9ca3af; }
+        .close-button:hover { color: #f9fafb; }
+        .result-text { color: #d1d5db; }
+        .diff-equal { color: #d1d5db; }
+        .action-button.secondary { background-color: #374151; color: #f9fafb; }
+        .action-button.secondary:hover { background-color: #4b5563; }
       }
 
       .popover-header {
@@ -201,12 +218,12 @@ export class PopoverRenderer {
       }
 
       .action-button.primary {
-        background-color: #2563eb;
+        background-color: #0284c7; /* primary-600 */
         color: white;
       }
 
       .action-button.primary:hover {
-        background-color: #1d4ed8;
+        background-color: #0369a1; /* primary-700 */
       }
 
       .action-button.secondary {
