@@ -110,6 +110,17 @@
     - `src/sidepanel/components/HistoryView.tsx`
 
 ---
+- **날짜별 그룹화 (Group by Date):** (✅ 완료 - 2025-11-05)
+  - **문제점:** 채팅 기록이 시간순으로만 나열되어 있어, 특정 시점의 대화를 찾기 어렵습니다.
+  - **개선 제안:** 채팅 기록을 '오늘', '어제', '지난 7일', '지난 30일', '이전' 등의 기준으로 그룹화하여 보여줍니다. 이를 통해 사용자는 시간의 흐름에 따라 대화 목록을 더 쉽게 탐색할 수 있습니다.
+  - **구현 내용:**
+    - **날짜 그룹화 유틸리티:** `ChatSession` 배열을 받아 날짜 기준에 따라 그룹화된 객체를 반환하는 `groupSessionsByDate` 유틸리티 함수를 `shared/utils`에 추가했습니다.
+    - **UI 렌더링 로직 수정:** `HistoryView` 컴포넌트에서 `groupSessionsByDate` 함수를 사용하여 필터링된 세션 목록을 그룹화하고, 각 그룹의 제목과 해당 그룹에 속한 세션 목록을 순차적으로 렌더링하도록 UI 로직을 수정했습니다.
+  - **구현 위치:**
+    - `src/shared/utils/index.ts`
+    - `src/sidepanel/components/HistoryView.tsx`
+
+---
 
 ## 마일스톤 1: 프로젝트 설정 (✅ 완료)
 
