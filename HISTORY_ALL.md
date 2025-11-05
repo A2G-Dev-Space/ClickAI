@@ -3,6 +3,45 @@
 이 문서는 Click AI v1.0.0의 구현이 완료된 기능에 대한 상세 보고서입니다. 각 기능은 코드베이스 분석 및 아키텍처 블루프린트와 교차 검증되었으며, 관련된 주요 소스 코드 파일 경로와 아키텍처 설계 내용이 함께 명시되어 있습니다.
 
 ---
+- **통일된 아이콘 시스템 도입:** (✅ 완료 - 2025-11-05)
+  - **문제점:** 아이콘 스타일이 일관되지 않을 수 있습니다.
+  - **개선 제안:** `Lucide`나 `Feather Icons`와 같이, 선의 굵기가 일정하고 모서리가 부드럽게 처리된 현대적인 아이콘 세트를 도입하여 프로젝트 전반의 모든 아이콘을 교체합니다. 이는 디자인의 완성도와 통일성을 크게 높입니다.
+  - **구현 내용:**
+    - `lucide-react` 라이브러리를 도입하여 프로젝트의 아이콘 시스템을 통일했습니다.
+    - `AssistantMessage`, `ChatInput`, `Header`, `HistoryView`, `SettingsView` 등 주요 컴포넌트에서 사용되던 기존의 인라인 SVG 아이콘들을 모두 `lucide-react` 아이콘으로 교체했습니다.
+    - 아이콘들의 `size`와 `strokeWidth`를 일관되게 조정하여 전체적인 디자인 통일성을 향상시켰습니다.
+  - **구현 위치:**
+    - `package.json` (dependency 추가)
+    - `src/sidepanel/components/AssistantMessage.tsx`
+    - `src/sidepanel/components/ChatInput.tsx`
+    - `src/sidepanel/components/Header.tsx`
+    - `src/sidepanel/components/HistoryView.tsx`
+    - `src/sidepanel/components/SettingsView.tsx`
+
+---
+- **Gemini 스타일 로딩 인디케이터:** (✅ 완료 - 2025-11-05)
+  - **문제점:** 현재의 스피너 로딩은 일반적입니다.
+  - **개선 제안:** Gemini에서 사용하는 것처럼, 반짝이는 빛이 좌우로 움직이는 'Shimmer' 효과나, 크기가 다른 세 개의 점이 파동처럼 움직이는 로딩 인디케이터로 교체하여 AI가 '생각'하고 있다는 느낌을 세련되게 전달합니다.
+  - **구현 내용:**
+    - 기존의 `animate-bounce`를 사용하는 로딩 인디케이터를 개선하여, `scale`과 `opacity`를 함께 조절하는 새로운 `pulse-gemini` CSS 애니메이션을 구현했습니다.
+    - 3개의 점에 각각 미세한 `animation-delay`를 적용하여 파동처럼 부드럽게 퍼져나가는 효과를 만들었습니다.
+  - **구현 위치:**
+    - `src/sidepanel/components/LoadingIndicator.tsx`
+    - `src/sidepanel/index.css`
+
+---
+- **의미있는 아이콘 트랜지션 (Meaningful Icon Transitions):** (✅ 완료 - 2025-11-05)
+  - **문제점:** 아이콘의 상태 변화가 즉각적이어서 인지하기 어렵습니다.
+  - **개선 제안:** '복사' 아이콘을 클릭하면 부드럽게 '체크' 아이콘으로 변형(morph)되는 애니메이션을 추가합니다. '전송' 버튼 또한 클릭 시 '정지' 아이콘으로 자연스럽게 전환되도록 하여, 상태 변화를 명확하고 아름답게 전달합니다.
+  - **구현 내용:**
+    - `AssistantMessage.tsx`의 복사 버튼에 '복사'와 '체크' SVG 아이콘을 적용하고, `copied` 상태에 따라 `opacity`와 `scale`을 조절하여 부드러운 전환 애니메이션을 구현했습니다.
+    - `ChatInput.tsx`의 전송/중지 버튼을 하나로 통합하고, `isLoading` 상태에 따라 '전송'과 '정지' SVG 아이콘이 `opacity`, `scale`, `rotate` 효과와 함께 전환되도록 구현했습니다.
+    - 모든 애니메이션은 TailwindCSS 유틸리티 클래스를 사용하여 별도의 CSS 파일 수정 없이 구현되었습니다.
+  - **구현 위치:**
+    - `src/sidepanel/components/AssistantMessage.tsx`
+    - `src/sidepanel/components/ChatInput.tsx`
+
+---
 
 ## 마일스톤 1: 프로젝트 설정 (✅ 완료)
 
@@ -227,5 +266,5 @@
   - **구현 위치:** `jest.config.js`, `jest.setup.js`
 
 - **단위 및 통합 테스트 작성:**
-  - `shared/utils`, `shared/errors` 등 핵심 로직에 대한 단위 테스트와 `AssistantMessage`, `EmptyState` 등 주요 React 컴포넌트에 대한 통합 테스트를 작성하여 총 56개의 테스트 케이스를 확보했습니다.
+  - `shared/utils`, `shared/errors` 등 핵심 로직에 대한 단위 테스트와 `AssistantMessage`, `EmptyState` 등 주요 React 컴포포넌트에 대한 통합 테스트를 작성하여 총 56개의 테스트 케이스를 확보했습니다.
   - **구현 위치:** `src/**/__tests__/`

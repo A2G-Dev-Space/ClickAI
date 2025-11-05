@@ -1,16 +1,52 @@
-# Click AI 개발 로드맵 (요약)
+# Click AI 통합 개발 로드맵
 
-이 문서는 Click AI v1.0.0 이후의 개발 로드맵을 간략하게 요약합니다.
+## 마일스톤 9: 문서화 및 배포
+- **P0** 최종 사용자 문서 작성
+- **P0** 기술 문서 최종 검토
+- **P0** 빌드 및 패키징
+- **P0** GitHub 릴리즈
+- **P1** 자동 업데이트 확인 기능 구현
+- **P0** 최종 보안 및 개인정보 검토
 
-세부 작업 및 아이디어는 [전체 개발 로드맵(TODO_ALL.md)](./TODO_ALL.md) 파일에서 확인하실 수 있습니다.
+## 블루프린트 기반 추가 구현 항목
+- **코드 분할 (Code Splitting):**
+- **가상 스크롤 (Virtual Scrolling):**
+- **CI/CD 파이프라인 구축:**
+- **E2E(End-to-End) 테스트 자동화:**
 
----
+## Gemini 디자인 시스템 기반 UI/UX 개선 제안
+- **전용 서체 도입 및 타이포그래피 시스템 정립:**
+- **8px 그리드 시스템 기반의 정교한 여백 관리:**
+- **오로라 그라데이션 배경 (Aurora Gradient Background):**
+- **세련된 액센트 컬러 팔레트 도입:**
+- **글래스모피즘 (Glassmorphism) 효과 적용:**
+- **순차적 메시지 애니메이션 (Staggered Animation):**
+- **사용자 및 AI 아바타 디자인:**
 
-## 향후 개발 계획
+## UI/UX 전문가 제안 개선사항
+- **실시간 타이핑 효과 (Live Typing Effect):**
+- **페이지 컨텍스트 인용 및 하이라이팅 (Source Citation & Highlighting):**
+- **후속 질문 제안 (Suggested Follow-up Questions):**
+- **대화 자동 요약 (Conversation Summary):**
+- **전체 기록 검색 (Full-text Search):**
+- **날짜별 그룹화 (Group by Date):**
+- **세션 즐겨찾기 및 다중 선택 (Pin & Bulk Actions):**
+- **선택 텍스트 즉시 교체 (Direct Replacement):**
+- **빠른 추가 수정 (Quick Refinements):**
+- **커맨드 팔레트 (Command Palette):**
+- **최초 사용자 온보딩 (First-use Onboarding):**
+- **LLM 고급 설정 (Advanced LLM Settings):**
 
-- [](./TODO_ALL.md#) (Lines: -5)
-- [마일스톤 9: 문서화 및 배포](./TODO_ALL.md#마일스톤-9-문서화-및-배포) (Lines: 7-20)
-- [블루프린트 기반 추가 구현 항목](./TODO_ALL.md#블루프린트-기반-추가-구현-항목) (Lines: 22-44)
-- [Gemini 디자인 시스템 기반 UI/UX 개선 제안](./TODO_ALL.md#gemini-디자인-시스템-기반-ui/ux-개선-제안) (Lines: 46-98)
-- [UI/UX 전문가 제안 개선사항 (Expert UI/UX Suggestions)](./TODO_ALL.md#ui/ux-전문가-제안-개선사항-expert-ui/ux-suggestions) (Lines: 100-160)
-- [기존 향후 개선사항 (Post-v1.0)](./TODO_ALL.md#기존-향후-개선사항-post-v1.0) (Lines: 162-183)
+## 기존 향후 개선사항 (Post-v1.0)
+- **RAG for Chat with Page**
+- **음성 입력**
+- **사용자 정의 프롬프트 템플릿**
+- **키보드 단축키 설정**
+- **채팅 내보내기 (Markdown/PDF)**
+- **멀티 LLM 제공자 지원**
+- **채팅 기록 검색**
+- **대화 분기 (Conversation Branching)**
+- **코드 실행**
+- **협업 세션**
+- **플러그인 시스템**
+- **오프라인 모드**

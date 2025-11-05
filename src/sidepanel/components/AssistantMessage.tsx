@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { useState } from 'react'
 import { Copy, Check } from 'lucide-react'
+import AIAvatar from './AIAvatar'
 
 interface AssistantMessageProps {
   message: ChatMessage
@@ -25,13 +26,14 @@ export default function AssistantMessage({ message, index }: AssistantMessagePro
 
   return (
     <div
-      className="flex justify-start animate-fade-in"
+      className="flex items-start space-x-3 sm:space-x-4 animate-fade-in"
       role="article"
       aria-label="AI 응답"
       style={{ animationDelay: `${index * 100}ms` }}
     >
+      <AIAvatar />
       <div className="max-w-[85%] sm:max-w-[80%] md:max-w-[75%]">
-        <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-lg px-4 py-3 sm:px-4 shadow-sm hover:shadow-md transition-all duration-200">
+        <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-none px-4 py-3 sm:px-4 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
