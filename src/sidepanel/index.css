@@ -107,6 +107,21 @@ body {
 }
 
 /* Custom animations */
+@keyframes pulse-gemini {
+  0%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.animate-pulse-gemini {
+  animation: pulse-gemini 1.4s infinite ease-in-out;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
