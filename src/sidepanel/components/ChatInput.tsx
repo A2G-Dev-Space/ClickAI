@@ -1,4 +1,5 @@
 import { useState, KeyboardEvent } from 'react'
+import { Send, StopCircle } from 'lucide-react'
 
 interface ChatInputProps {
   onSend: (message: string) => void
@@ -54,44 +55,13 @@ export default function ChatInput({ onSend, onCancel, disabled, isLoading }: Cha
               className={`absolute transition-all duration-200 ease-in-out ${!isLoading ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-50 -rotate-45'}`}
               aria-hidden="true"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5 sm:w-6 sm:h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                />
-              </svg>
+              <Send size={24} className="w-5 h-5 sm:w-6 sm:h-6" />
             </span>
             <span
               className={`absolute transition-all duration-200 ease-in-out ${isLoading ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-50 rotate-45'}`}
               aria-hidden="true"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5 sm:w-6 sm:h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.563C9.252 14.437 9 14.185 9 13.874V9.563z"
-                />
-              </svg>
+              <StopCircle size={24} className="w-5 h-5 sm:w-6 sm:h-6" />
             </span>
           </button>
       </div>

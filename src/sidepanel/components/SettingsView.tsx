@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { UserSettings } from '@/shared/types'
 import { MessageType } from '@/shared/types'
+import { ArrowLeft, Palette, Languages, Database, Trash2, Save } from 'lucide-react'
 
 interface SettingsViewProps {
   onBack: () => void
@@ -125,9 +126,7 @@ export default function SettingsView({ onBack }: SettingsViewProps) {
             className="mr-2 sm:mr-3 p-1.5 sm:p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors active:scale-95"
             aria-label="뒤로 가기"
           >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            <ArrowLeft size={24} className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={1.5} />
           </button>
           <h1 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">설정</h1>
         </div>
@@ -137,7 +136,8 @@ export default function SettingsView({ onBack }: SettingsViewProps) {
       <main className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-6" role="main">
         {/* Theme */}
         <section>
-          <label htmlFor="theme-select" className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label htmlFor="theme-select" className="flex items-center text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <Palette size={16} className="mr-2" />
             테마
           </label>
           <select
@@ -154,7 +154,8 @@ export default function SettingsView({ onBack }: SettingsViewProps) {
 
         {/* Language */}
         <section>
-          <label htmlFor="language-select" className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <label htmlFor="language-select" className="flex items-center text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <Languages size={16} className="mr-2" />
             언어
           </label>
           <select
@@ -170,7 +171,8 @@ export default function SettingsView({ onBack }: SettingsViewProps) {
 
         {/* Storage Stats */}
         <section className="border-t border-gray-200 dark:border-gray-700 pt-6">
-          <h2 className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+          <h2 className="flex items-center text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+            <Database size={16} className="mr-2" />
             저장 공간
           </h2>
           <div className="space-y-3">
@@ -198,14 +200,16 @@ export default function SettingsView({ onBack }: SettingsViewProps) {
 
         {/* Data Management */}
         <section className="border-t border-gray-200 dark:border-gray-700 pt-6">
-          <h2 className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+          <h2 className="flex items-center text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+            <Trash2 size={16} className="mr-2" />
             데이터 관리
           </h2>
           <button
             onClick={clearAllData}
-            className="w-full px-4 py-2 text-sm sm:text-base bg-red-600 text-white rounded-lg hover:bg-red-700 active:bg-red-800 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            className="w-full flex items-center justify-center px-4 py-2 text-sm sm:text-base bg-red-600 text-white rounded-lg hover:bg-red-700 active:bg-red-800 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             aria-label="모든 채팅 데이터 삭제"
           >
+            <Trash2 size={16} className="mr-2" />
             모든 데이터 삭제
           </button>
         </section>
@@ -216,10 +220,20 @@ export default function SettingsView({ onBack }: SettingsViewProps) {
         <button
           onClick={saveSettings}
           disabled={saving}
-          className="w-full px-4 py-2 text-sm sm:text-base bg-primary-600 text-white rounded-lg hover:bg-primary-700 active:bg-primary-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+          className="w-full flex items-center justify-center px-4 py-2 text-sm sm:text-base bg-primary-600 text-white rounded-lg hover:bg-primary-700 active:bg-primary-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
           aria-label="설정 저장"
         >
-          {saving ? '저장 중...' : '설정 저장'}
+          {saving ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              저장 중...
+            </>
+          ) : (
+            <>
+              <Save size={16} className="mr-2" />
+              설정 저장
+            </>
+          )}
         </button>
       </footer>
     </div>

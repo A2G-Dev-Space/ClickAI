@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useChatStore } from '../store/chatStore'
 import { ChatSession } from '@/shared/types'
 import { formatTimestamp } from '@/shared/utils'
+import { ArrowLeft, Trash2 } from 'lucide-react'
+import LoadingIndicator from './LoadingIndicator'
 
 interface HistoryViewProps {
   onBack: () => void
@@ -47,9 +49,7 @@ export default function HistoryView({ onBack }: HistoryViewProps) {
             className="mr-2 sm:mr-3 p-1.5 sm:p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors active:scale-95"
             aria-label="뒤로 가기"
           >
-            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            <ArrowLeft size={24} className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={1.5} />
           </button>
           <h1 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">채팅 기록</h1>
         </div>
@@ -60,8 +60,8 @@ export default function HistoryView({ onBack }: HistoryViewProps) {
         {loading ? (
           <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400" role="status">
             <div className="flex flex-col items-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mb-2"></div>
-              <p className="text-sm">로딩 중...</p>
+              <LoadingIndicator />
+              <p className="text-sm mt-2">로딩 중...</p>
             </div>
           </div>
         ) : sessions.length === 0 ? (
@@ -107,9 +107,7 @@ export default function HistoryView({ onBack }: HistoryViewProps) {
                       aria-label={`${session.title} 삭제`}
                       tabIndex={0}
                     >
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
+                      <Trash2 size={20} className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.5} />
                     </button>
                   </div>
                 </div>
