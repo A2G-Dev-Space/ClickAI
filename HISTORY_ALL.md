@@ -121,6 +121,20 @@
     - `src/sidepanel/components/HistoryView.tsx`
 
 ---
+- **세션 즐겨찾기 (Session Pinning):** (✅ 완료 - 2025-11-05)
+  - **문제점:** 중요한 대화 세션을 나중에 다시 찾기 어렵습니다.
+  - **개선 제안:** 각 세션에 '고정(Pin)' 기능을 추가하여, 중요한 세션을 항상 기록 목록의 최상단에 표시할 수 있도록 합니다.
+  - **구현 내용:**
+    - **데이터 모델 확장:** `ChatSession` 타입에 `isPinned` (boolean) 속성을 추가했습니다.
+    - **UI/UX 구현:** `HistoryView`의 각 세션 항목에 `Pin` / `PinOff` 아이콘 버튼을 추가하여 고정 상태를 시각적으로 표시하고, 클릭 시 상태를 토글할 수 있도록 구현했습니다.
+    - **상태 관리:** `chatStore`에 `togglePinSession` 액션을 추가하여 세션의 고정 상태를 변경하고, 변경된 내용을 `storageManager`를 통해 영구 저장하도록 구현했습니다.
+    - **정렬 로직 개선:** `HistoryView`의 세션 목록 정렬 로직을 수정하여, 고정된(`isPinned: true`) 세션이 항상 최상단에, 그 다음으로 최신순으로 정렬되도록 개선했습니다.
+  - **구현 위치:**
+    - `src/shared/types/index.ts`
+    - `src/sidepanel/components/HistoryView.tsx`
+    - `src/sidepanel/store/chatStore.ts`
+
+---
 
 ## 마일스톤 1: 프로젝트 설정 (✅ 완료)
 

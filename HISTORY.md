@@ -9,3 +9,4 @@
 - **대화 자동 요약 (Conversation Summary):** (✅ 완료 - 2025-11-05)
 - **전체 기록 검색 (Full-text Search):** (✅ 완료 - 2025-11-05)
 - **날짜별 그룹화 (Group by Date):** (✅ 완료 - 2025-11-05)
+- **세션 즐겨찾기 (Session Pinning):** (✅ 완료 - 2025-11-05)
