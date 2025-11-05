@@ -131,6 +131,7 @@ body {
 
 .animate-fade-in {
   animation: fadeIn 0.3s ease-out;
+  animation-fill-mode: backwards;
 }
 
 .animate-slide-in {

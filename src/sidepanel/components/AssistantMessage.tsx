@@ -6,9 +6,10 @@ import { useState } from 'react'
 
 interface AssistantMessageProps {
   message: ChatMessage
+  index: number
 }
 
-export default function AssistantMessage({ message }: AssistantMessageProps) {
+export default function AssistantMessage({ message, index }: AssistantMessageProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -22,7 +23,12 @@ export default function AssistantMessage({ message }: AssistantMessageProps) {
   }
 
   return (
-    <div className="flex justify-start animate-fade-in" role="article" aria-label="AI 응답">
+    <div
+      className="flex justify-start animate-fade-in"
+      role="article"
+      aria-label="AI 응답"
+      style={{ animationDelay: `${index * 100}ms` }}
+    >
       <div className="max-w-[85%] sm:max-w-[80%] md:max-w-[75%]">
         <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-lg px-4 py-3 sm:px-4 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none">
