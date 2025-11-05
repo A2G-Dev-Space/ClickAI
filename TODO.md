@@ -24,7 +24,6 @@
 - **사용자 및 AI 아바타 디자인:**
 
 ## UI/UX 전문가 제안 개선사항
-- **실시간 타이핑 효과 (Live Typing Effect):**
 - **페이지 컨텍스트 인용 및 하이라이팅 (Source Citation & Highlighting):**
 - **후속 질문 제안 (Suggested Follow-up Questions):**
 - **대화 자동 요약 (Conversation Summary):**

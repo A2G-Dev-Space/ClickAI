@@ -42,6 +42,18 @@
     - `src/sidepanel/components/ChatInput.tsx`
 
 ---
+- **실시간 타이핑 효과 (Live Typing Effect):** (✅ 완료 - 2025-11-05)
+  - **문제점:** AI가 응답을 생성하는 동안 사용자는 단순히 로딩 인디케이터만 보게 되어, 응답이 언제 완료될지 알 수 없어 답답함을 느낄 수 있습니다.
+  - **개선 제안:** AI의 응답이 생성되는 과정을 실시간 타이핑 효과로 보여줍니다. 한 글자씩 나타나는 효과는 AI가 '생각'하고 '쓰고' 있다는 인상을 주어 사용자 경험을 더욱 인터랙티브하고 생동감 있게 만듭니다.
+  - **구현 내용:**
+    - `TypingEffect` React 컴포넌트를 새로 구현했습니다. 이 컴포넌트는 `useEffect`와 `requestAnimationFrame`을 사용하여 주어진 텍스트를 한 글자씩 부드럽게 표시합니다.
+    - `AssistantMessage` 컴포넌트 내에서, 마지막 AI 메시지이고 스트리밍이 진행 중(`isLoading` && `isLastMessage`)일 때 `TypingEffect` 컴포넌트를 렌더링하도록 조건부 로직을 추가했습니다.
+    - 타이핑 효과가 진행 중일 때는 커서(cursor)를 표시하여 실제 타이핑하는 듯한 느낌을 강화했습니다.
+  - **구현 위치:**
+    - `src/sidepanel/components/TypingEffect.tsx` (new file)
+    - `src/sidepanel/components/AssistantMessage.tsx`
+
+---
 
 ## 마일스톤 1: 프로젝트 설정 (✅ 완료)
 
