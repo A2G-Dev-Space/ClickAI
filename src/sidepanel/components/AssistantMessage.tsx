@@ -2,11 +2,12 @@ import { ChatMessage } from '@/shared/types'
 import { formatTimestamp } from '@/shared/utils'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Copy, Check } from 'lucide-react'
 import AIAvatar from './AIAvatar'
 import TypingEffect from './TypingEffect'
-import Citation from './Citation' // Import the new component
+import Citation from './Citation'
+import SuggestedQuestion from './SuggestedQuestion' // Import the new component
 
 interface AssistantMessageProps {
   message: ChatMessage
@@ -17,10 +18,26 @@ interface AssistantMessageProps {
 export default function AssistantMessage({ message, index, isStreaming }: AssistantMessageProps) {
   const [copied, setCopied] = useState(false)
 
+  const { mainContent, suggestedQuestions } = useMemo(() => {
+    const lines = message.content.split('\n')
+    const questions: string[] = []
+    const content: string[] = []
+    const suggestionPrefix = 'SUGGESTED_QUESTION:'
+
+    for (const line of lines) {
+      if (line.startsWith(suggestionPrefix)) {
+        questions.push(line.substring(suggestionPrefix.length).trim())
+      } else {
+        content.push(line)
+      }
+    }
+    return { mainContent: content.join('\n').trim(), suggestedQuestions: questions }
+  }, [message.content])
+
   const handleCopy = async () => {
     try {
       // Remove citation markers for clean copy
-      const cleanContent = message.content.replace(/\[click-ai-ref-\d+\]/g, '')
+      const cleanContent = mainContent.replace(/\[click-ai-ref-\d+\]/g, '')
       await navigator.clipboard.writeText(cleanContent)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
@@ -32,7 +49,6 @@ export default function AssistantMessage({ message, index, isStreaming }: Assist
   const markdownRenderer = (text: string) => {
     // Regex to find citations like [click-ai-ref-12]
     const citationRegex = /\[(click-ai-ref-\d+)\]/g
-    const parts = text.split(citationRegex)
 
     return (
       <ReactMarkdown
@@ -89,18 +105,27 @@ export default function AssistantMessage({ message, index, isStreaming }: Assist
       style={{ animationDelay: `${index * 100}ms` }}
     >
       <AIAvatar />
-      <div className="max-w-[85%] sm:max-w-[80%] md:max-w-[75%]">
+      <div className="flex flex-col gap-2 max-w-[85%] sm:max-w-[80%] md:max-w-[75%]">
         <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl rounded-tl-none px-4 py-3 sm:px-4 shadow-sm hover:shadow-md transition-all duration-200">
           <div className="prose prose-sm sm:prose-base dark:prose-invert max-w-none">
-            {isStreaming ? (
+            {isStreaming && !mainContent ? (
               <TypingEffect text={message.content || '_생각 중..._'}>
                 {(text) => markdownRenderer(text)}
               </TypingEffect>
             ) : (
-              markdownRenderer(message.content || '_생각 중..._')
+              markdownRenderer(mainContent || '_생각 중..._')
             )}
           </div>
         </div>
+
+        {!isStreaming && suggestedQuestions.length > 0 && (
+          <div className="flex flex-col items-start gap-2 pt-2">
+            {suggestedQuestions.map((q, i) => (
+              <SuggestedQuestion key={i} question={q} />
+            ))}
+          </div>
+        )}
+
         <div className="flex items-center justify-between mt-2 px-2">
           <div className="text-xs text-gray-500 dark:text-gray-400">
             <time dateTime={new Date(message.timestamp).toISOString()}>
@@ -114,13 +139,17 @@ export default function AssistantMessage({ message, index, isStreaming }: Assist
           >
             <span className="sr-only">{copied ? '복사 완료' : '메시지 복사'}</span>
             <span
-              className={`transition-all duration-200 ${copied ? 'opacity-0 scale-50' : 'opacity-100 scale-100'}`}
+              className={`transition-all duration-200 ${
+                copied ? 'opacity-0 scale-50' : 'opacity-100 scale-100'
+              }`}
               aria-hidden="true"
             >
               <Copy size={16} strokeWidth={1.5} />
             </span>
             <span
-              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ${copied ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
+              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-200 ${
+                copied ? 'opacity-100 scale-100' : 'opacity-0 scale-50'
+              }`}
               aria-hidden="true"
             >
               <Check size={16} strokeWidth={1.5} className="text-green-500" />

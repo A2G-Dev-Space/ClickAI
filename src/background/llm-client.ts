@@ -43,7 +43,7 @@ export class LLMClient {
       throw new APIAuthError('LLM API configuration is missing')
     }
 
-    const processedMessages = this.injectCitationInstructions(messages)
+    const processedMessages = this.injectSystemInstructions(messages)
 
     // Check token count
     const tokenCount = this.countTokens(processedMessages)
@@ -190,10 +190,33 @@ export class LLMClient {
   }
 
   /**
-   * Injects citation instructions into the system message if page context is present.
+   * Injects system instructions (citations, suggested questions) into the system message.
    */
-  private injectCitationInstructions(messages: ChatMessage[]): ChatMessage[] {
-    const citationInstruction = `
+  private injectSystemInstructions(messages: ChatMessage[]): ChatMessage[] {
+    const processedMessages = messages.map((msg) => ({ ...msg })) // Deep copy
+    const systemMessage = processedMessages.find((msg) => msg.role === 'system')
+
+    if (!systemMessage) {
+      // Should not happen in normal flow, but good to handle
+      return processedMessages
+    }
+
+    // Instructions for suggested questions
+    const suggestedQuestionInstruction = `
+---
+SUGGESTED QUESTIONS INSTRUCTIONS:
+- After your main response, suggest 2-3 relevant follow-up questions the user might have.
+- Each suggested question MUST be on a new line and start with the prefix "SUGGESTED_QUESTION:".
+- Example:
+SUGGESTED_QUESTION: Can you explain this in simpler terms?
+SUGGESTED_QUESTION: How does this compare to other methods?
+---
+`
+    systemMessage.content += suggestedQuestionInstruction
+
+    // Instructions for citations (if page context is present)
+    if (systemMessage.content.includes('Page Context:')) {
+      const citationInstruction = `
 ---
 CITATION INSTRUCTIONS:
 - When you use information from the provided page context in your response, you MUST cite the source.
@@ -204,12 +227,6 @@ CITATION INSTRUCTIONS:
 - Do NOT cite sources for information that is not from the provided context.
 ---
 `
-    const processedMessages = messages.map((msg) => ({ ...msg })) // Deep copy
-    const systemMessage = processedMessages.find(
-      (msg) => msg.role === 'system' && msg.content.includes('Page Context:')
-    )
-
-    if (systemMessage) {
       systemMessage.content += citationInstruction
     }
 
